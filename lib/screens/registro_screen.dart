@@ -1,6 +1,8 @@
+import 'package:app_distribuidas_taxi/providers/registro_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/taxista.dart';
 import '../providers/providers.dart';
 import '../ui/ui.dart';
 
@@ -24,8 +26,8 @@ class Registro extends StatelessWidget {
                 height: 20,
                 // color: Colors.red,
                 alignment: Alignment.centerLeft,
-                margin: EdgeInsets.symmetric(horizontal: 25, vertical: 0),
-                child: Text(
+                margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+                child: const Text(
                   'Aplicación de conductor',
                   style: TextStyle(
                       fontSize: 15,
@@ -48,7 +50,7 @@ class Registro extends StatelessWidget {
       height: 50,
       alignment: Alignment.centerLeft,
       // color: Colors.red,
-      margin: const EdgeInsets.symmetric(vertical: 40, horizontal: 25),
+      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       child: const Text(
         'Regístrate',
         style: TextStyle(
@@ -63,8 +65,8 @@ class Registro extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 25),
       child: ChangeNotifierProvider(
-        create: (context) => LoginFormProvider(),
-        child: _LoginForm(),
+        create: (context) => RegistroProvider(),
+        child: const _LoginForm(),
       ),
     );
   }
@@ -91,13 +93,37 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginForm = Provider.of<LoginFormProvider>(context);
+    final registroForm = Provider.of<RegistroProvider>(context);
     return Container(
       child: Form(
-        key: loginForm.formKey,
+        key: registroForm.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
+            TextFormField(
+              autocorrect: true,
+              onChanged: (value) => registroForm.nombre = value,
+              // obscureText: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecorations.authInputDecoration(
+                  hintText: 'Alejandro',
+                  labelText: 'Nombre',
+                  color: Color(0xff202020),
+                  prefixIcon: Icons.badge),
+            ),
+            _formSizeBox(),
+            TextFormField(
+              autocorrect: true,
+              onChanged: (value) => registroForm.apellido = value,
+              // obscureText: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecorations.authInputDecoration(
+                  hintText: 'Rocano',
+                  labelText: 'Apellido',
+                  color: Color(0xff202020),
+                  prefixIcon: Icons.badge),
+            ),
+            _formSizeBox(),
             TextFormField(
               autocorrect: false,
               // onChanged: (value) => ,
@@ -112,7 +138,7 @@ class _LoginForm extends StatelessWidget {
               },
               keyboardType: TextInputType.emailAddress,
               onChanged: (value) {
-                loginForm.email = value;
+                registroForm.email = value;
               },
               decoration: InputDecorations.authInputDecoration(
                 color: Color(0xff202020),
@@ -131,7 +157,7 @@ class _LoginForm extends StatelessWidget {
                   return 'Contraseña mínima de 6 caracteres';
                 }
               },
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) => registroForm.password = value,
               obscureText: true,
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecorations.authInputDecoration(
@@ -144,13 +170,13 @@ class _LoginForm extends StatelessWidget {
             TextFormField(
               autocorrect: false,
               validator: (value) {
-                if (value != null && value.length >= 6) {
+                if (value == registroForm.password) {
                   return null;
                 } else {
-                  return 'Contraseña mínima de 6 caracteres';
+                  return 'Las contraseñas no coinciden';
                 }
               },
-              onChanged: (value) => loginForm.password = value,
+              onChanged: (value) => registroForm.repeatPassword = value,
               obscureText: true,
               keyboardType: TextInputType.visiblePassword,
               decoration: InputDecorations.authInputDecoration(
@@ -160,8 +186,30 @@ class _LoginForm extends StatelessWidget {
                   prefixIcon: Icons.lock),
             ),
             _formSizeBox(),
+            TextFormField(
+              autocorrect: true,
+              onChanged: (value) => registroForm.cooperativa = value,
+              // obscureText: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecorations.authInputDecoration(
+                  hintText: 'Cooperativa Chems',
+                  labelText: 'Cooperativa',
+                  color: Color(0xff202020),
+                  prefixIcon: Icons.work),
+            ),
+            _formSizeBox(),
             MaterialButton(
               onPressed: () {
+                Taxista taxista = Taxista(
+                    usuario: registroForm.email,
+                    contrasenia: registroForm.password,
+                    nombre: registroForm.nombre,
+                    apellido: registroForm.apellido,
+                    cooperativa: registroForm.apellido,
+                    estado: '');
+                print(taxista.toJson());
+                print(registroForm.createTaxista(taxista));
+
                 Navigator.pushReplacementNamed(context, 'login');
               },
               shape: RoundedRectangleBorder(
@@ -177,13 +225,43 @@ class _LoginForm extends StatelessWidget {
                 child: const Text(
                   'Registrarse',
                   style: TextStyle(
-                    fontFamily: 'Archivo-Medium',
+                    fontFamily: 'Archivo',
+                    fontWeight: FontWeight.w700,
                     fontSize: 15,
                     color: Color(0xff202020),
                   ),
                 ),
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, 'login');
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              disabledColor: Colors.grey,
+              elevation: 0,
+              color: Color(0xff202020),
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                width: double.infinity,
+                alignment: Alignment.center,
+                child: const Text(
+                  'Volver al inicio',
+                  style: TextStyle(
+                    fontFamily: 'Archivo',
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            _formSizeBox()
           ],
         ),
       ),

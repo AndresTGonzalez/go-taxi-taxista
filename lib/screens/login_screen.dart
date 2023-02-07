@@ -1,3 +1,4 @@
+import 'package:app_distribuidas_taxi/models/taxista.dart';
 import 'package:app_distribuidas_taxi/ui/input_decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -152,7 +153,19 @@ class _LoginForm extends StatelessWidget {
                       loginForm.isLoading = true;
                       FocusScope.of(context).unfocus();
                       await Future.delayed(Duration(seconds: 2));
-                      Navigator.pushReplacementNamed(context, 'home');
+                      if (await loginForm.login(Taxista(
+                          usuario: loginForm.email,
+                          contrasenia: loginForm.password,
+                          nombre: '',
+                          apellido: '',
+                          cooperativa: '',
+                          estado: ''))) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.pushReplacementNamed(context, 'home');
+                      } else {
+                        _showToast(context);
+                        loginForm.isLoading = false;
+                      }
                     },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -203,6 +216,17 @@ class _LoginForm extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Login incorrecto'),
+        action: SnackBarAction(
+            label: 'Ocultar', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }

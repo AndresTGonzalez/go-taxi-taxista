@@ -1,10 +1,28 @@
+import 'package:app_distribuidas_taxi/providers/providers.dart';
+import 'package:app_distribuidas_taxi/util/sesion.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Estado extends StatelessWidget {
   const Estado({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      child: _EstadoBody(),
+      create: (context) => EstadoProvider(),
+    );
+  }
+}
+
+class _EstadoBody extends StatelessWidget {
+  const _EstadoBody({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final estadoProvider = Provider.of<EstadoProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -40,7 +58,15 @@ class Estado extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     color: Colors.white,
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: Sesion.taxista.estado == 'Disponible'
+                          ? null
+                          : () async {
+                              if (await estadoProvider.estadoDisponible()) {
+                                estadoProvider.isLoading = true;
+                              } else {
+                                estadoProvider.isLoading = false;
+                              }
+                            },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -68,7 +94,15 @@ class Estado extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     color: Colors.white,
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: Sesion.taxista.estado == 'Ocupado'
+                          ? null
+                          : () async {
+                              if (await estadoProvider.estadoOcupado()) {
+                                estadoProvider.isLoading = true;
+                              } else {
+                                estadoProvider.isLoading = false;
+                              }
+                            },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),

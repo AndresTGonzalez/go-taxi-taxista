@@ -1,4 +1,6 @@
+import 'package:app_distribuidas_taxi/providers/viajes_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/widgets.dart';
 
@@ -7,6 +9,21 @@ class ViajesAsignados extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      child: _ViajesAsignadosContent(),
+      create: (context) => ViajesProvider(),
+    );
+  }
+}
+
+class _ViajesAsignadosContent extends StatelessWidget {
+  const _ViajesAsignadosContent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final viajesProvider = Provider.of<ViajesProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -33,8 +50,10 @@ class ViajesAsignados extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.734,
                 // color: Colors.red,
                 child: ListView.builder(
-                  itemBuilder: (context, index) => ViajeCard(),
-                  itemCount: 5,
+                  itemBuilder: (context, index) => ViajeCard(
+                    solicitud: viajesProvider.viajes[index],
+                  ),
+                  itemCount: viajesProvider.viajes.length,
                 ),
               ),
             )

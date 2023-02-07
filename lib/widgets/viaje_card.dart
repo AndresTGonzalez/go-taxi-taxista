@@ -1,9 +1,12 @@
 // ignore_for_file: sort_child_properties_last
 
+import 'package:app_distribuidas_taxi/models/Solicitud.dart';
 import 'package:flutter/material.dart';
 
 class ViajeCard extends StatelessWidget {
-  const ViajeCard({super.key});
+  final Solicitud solicitud;
+
+  const ViajeCard({super.key, required this.solicitud});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class ViajeCard extends StatelessWidget {
               // color: Colors.red,
               margin: const EdgeInsets.only(left: 20, top: 20),
               child: Text(
-                'En camino',
+                solicitud.estado!,
                 style: TextStyle(
                     fontFamily: 'Archivo-Bold',
                     color: Color(0xff202020),
@@ -35,7 +38,7 @@ class ViajeCard extends StatelessWidget {
               // color: Colors.red,
               margin: EdgeInsets.only(left: 20, top: 10, right: 20),
               child: Text(
-                'Av. Bolivariana y Cervantes',
+                '${solicitud.callePrincipal!} y ${solicitud.calleSecundaria!}',
                 style: TextStyle(
                     fontFamily: 'Archivo-Medium',
                     color: Color(0xff202020),
@@ -49,7 +52,7 @@ class ViajeCard extends StatelessWidget {
               // color: Colors.red,
               margin: EdgeInsets.only(left: 20, top: 10, right: 20),
               child: Text(
-                'Diagonal a Mavesa',
+                solicitud.referencia!,
                 style: TextStyle(
                     fontFamily: 'Archivo-Medium',
                     color: Color(0xff202020),
@@ -63,7 +66,7 @@ class ViajeCard extends StatelessWidget {
               // color: Colors.red,
               margin: EdgeInsets.only(left: 20, top: 10, right: 20),
               child: Text(
-                'Cambio de billete de 20',
+                solicitud.informacionAdicional!,
                 style: TextStyle(
                     fontFamily: 'Archivo-Medium',
                     color: Color(0xff202020),
