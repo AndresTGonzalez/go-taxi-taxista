@@ -1,7 +1,10 @@
 // ignore_for_file: sort_child_properties_last
 
 import 'package:app_distribuidas_taxi/models/Solicitud.dart';
+import 'package:app_distribuidas_taxi/providers/card_provider.dart';
+import 'package:app_distribuidas_taxi/screens/viaje_en_curso.screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ViajeCard extends StatelessWidget {
   final Solicitud solicitud;
@@ -10,6 +13,24 @@ class ViajeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      child: _CardContent(solicitud: solicitud),
+      create: (context) => CardProvider(solicitud.id!),
+    );
+  }
+}
+
+class _CardContent extends StatelessWidget {
+  const _CardContent({
+    super.key,
+    required this.solicitud,
+  });
+
+  final Solicitud solicitud;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardProvider = Provider.of<CardProvider>(context);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -24,7 +45,7 @@ class ViajeCard extends StatelessWidget {
               // color: Colors.red,
               margin: const EdgeInsets.only(left: 20, top: 20),
               child: Text(
-                solicitud.estado!,
+                solicitud.estado!.toUpperCase(),
                 style: TextStyle(
                     fontFamily: 'Archivo-Bold',
                     color: Color(0xff202020),
@@ -56,7 +77,7 @@ class ViajeCard extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: 'Archivo-Medium',
                     color: Color(0xff202020),
-                    fontSize: 15),
+                    fontSize: 14),
               ),
             ),
             Container(
@@ -70,7 +91,7 @@ class ViajeCard extends StatelessWidget {
                 style: TextStyle(
                     fontFamily: 'Archivo-Medium',
                     color: Color(0xff202020),
-                    fontSize: 15),
+                    fontSize: 14),
               ),
             ),
             Container(
@@ -109,7 +130,25 @@ class ViajeCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (await cardProvider.aceptarSolicitud()) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViajeEnCursoScreen(
+                                    solicitud: solicitud,
+                                  ),
+                                ));
+                          } else {
+                            print('error');
+                          }
+                          // Navigator.pushReplacement(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) => ViajeEnCursoScreen(),
+                          //     ));
+                        },
                       ),
                     ),
                     Container(
@@ -138,7 +177,11 @@ class ViajeCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (await cardProvider.rechazarSolicitud()) {
+                            Navigator.popAndPushNamed(context, 'home');
+                          }
+                        },
                       ),
                     ),
                   ],

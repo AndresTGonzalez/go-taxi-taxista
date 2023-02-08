@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:app_distribuidas_taxi/models/taxista.dart';
+import 'package:app_distribuidas_taxi/util/IP.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class RegistroProvider extends ChangeNotifier {
-  final String _baseUrl = '104.196.70.11:3000';
+  final String _baseUrl = IP.ip;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 

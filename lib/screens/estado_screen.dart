@@ -1,4 +1,5 @@
 import 'package:app_distribuidas_taxi/providers/providers.dart';
+import 'package:app_distribuidas_taxi/util/control.dart';
 import 'package:app_distribuidas_taxi/util/sesion.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -158,7 +159,13 @@ class _EstadoBody extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     color: Colors.white,
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: Control.idControl > -1
+                          ? null
+                          : () async {
+                              if (!await estadoProvider.entrada()) {
+                                print('error');
+                              }
+                            },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -186,7 +193,13 @@ class _EstadoBody extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 10),
                     color: Colors.white,
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: Control.idControl == -1
+                          ? null
+                          : () async {
+                              if (!await estadoProvider.salida()) {
+                                print('error');
+                              }
+                            },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),

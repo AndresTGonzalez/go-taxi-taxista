@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_distribuidas_taxi/models/taxista.dart';
+import 'package:app_distribuidas_taxi/util/IP.dart';
 import 'package:app_distribuidas_taxi/util/sesion.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ import 'package:http/http.dart' as http;
 class LoginFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final String _baseUrl = '104.196.70.11:3000';
+  final String _baseUrl = IP.ip;
 
   String email = '';
   String password = '';
